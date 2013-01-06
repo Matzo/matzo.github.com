@@ -47,15 +47,48 @@ $(function() {
                         { name:"date",   type:"string" },
                         { name:"title",  type:"string" },
                         { name:"url",    type:"string" },
-                        { name:"type", type:"select", value:["select1", "select2", "select3"] },
-                        { name:"attributes", type:"select-multi", value:["attr1", "attr2", "attr3", "attr4"] }
+                        { name:"type", type:"select", value:["select1", "select2", "select3"], default:"select2" },
+                        { name:"attributes", type:"select-multi", value:["attr1", "attr2", "attr3", "attr4"], default:["attr2", "attr3", "attr4"] }
                     ]
                 }
             },
         ]
     }
 
-    var value = {};
+    var value = {
+        mapObject1:[
+            {
+                date:"2013/01/07",
+                title:"A Happy New Year!",
+                url:"http://www.google.co.jp/search?q=A+Happy+New+Year+!",
+                type:"select2",
+                attributes:["attr1", "attr3"]
+            },
+            {
+                date:"2012/12/31",
+                title:"New Year's Eve",
+                url:"http://www.google.co.jp/search?q=New+Year's+Eve",
+                type:"select3",
+                attributes:["attr2"]
+            }
+        ],
+        mapObject2:[
+            {
+                date:"2013/01/07",
+                title:"A Happy New Year!",
+                url:"http://www.google.co.jp/search?q=A+Happy+New+Year+!",
+                type:"select2",
+                attributes:["attr1", "attr3"]
+            },
+            {
+                date:"2012/12/31",
+                title:"New Year's Eve",
+                url:"http://www.google.co.jp/search?q=New+Year's+Eve",
+                type:"select3",
+                attributes:["attr2"]
+            }
+        ],
+    };
 
     new jsoned.Jsoned({template: template, value: value});
 });
