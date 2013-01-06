@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>JSONEditor</title>
+<link rel="stylesheet" href="css/jsoned.css">
+<script type="text/javascript" src="lib/jquery.min.js"></script>
+<link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
+<script src="lib/bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="lib/jquery-ui/js/jquery-ui-1.9.2.custom.min.js"></script>
+<link href="lib/jquery-ui/css/ui-lightness/jquery-ui-1.9.2.custom.min.css" rel="stylesheet">
+
+<script type="text/javascript" src="js/editor.js"></script>
+<script type="text/javascript" src="js/storage.js"></script>
+<script type="text/javascript" src="js/jsoned.js"></script>
+<script>
+$(function() {
+    var template = {
+        type:"map",
+        value:[
+            {
+                name:"mapObject1",
+                type:"list",
+                expandable:true,
+                min:1,
+                max:10,
+                value:{
+                    type:"map",
+                    value:[
+                        { name:"date",   type:"string" },
+                        { name:"title",  type:"string" },
+                        { name:"url",    type:"string" },
+                        { name:"type", type:"select", value:["select1", "select2", "select3"] },
+                        { name:"attributes", type:"select-multi", value:["attr1", "attr2", "attr3", "attr4"] }
+                    ]
+                }
+            },
+            {
+                name:"mapObject2",
+                type:"list",
+                expandable:true,
+                min:1,
+                max:10,
+                value:{
+                    type:"map",
+                    value:[
+                        { name:"date",   type:"string" },
+                        { name:"title",  type:"string" },
+                        { name:"url",    type:"string" },
+                        { name:"type", type:"select", value:["select1", "select2", "select3"] },
+                        { name:"attributes", type:"select-multi", value:["attr1", "attr2", "attr3", "attr4"] }
+                    ]
+                }
+            },
+        ]
+    }
+
+    var value = {};
+
+    new jsoned.Jsoned({template: template, value: value});
+});
+</script>
+</head>
+<body class="container-fluid">
+<header class="page-header">
+<h1>JSONED<span class="dark_color">ITOR</span></h1>
+</header>
+
+<h4>Sample Template</h4>
+<section id="inputBox">
+</section>
+
+<section id="editor">
+</section>
+
+<section id="outputBox">
+</section>
+
+<section id="controller">
+</section>
+<footer><small>Copyright &copy; 2013 Matzo All Rights Reserved.</small></footer>
+</body>
+</html>
