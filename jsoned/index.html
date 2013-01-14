@@ -3,16 +3,17 @@
 <head>
 <meta charset="utf-8">
 <title>JSONEditor</title>
-<link rel="stylesheet" href="css/jsoned.css">
-<script type="text/javascript" src="lib/jquery.min.js"></script>
-<link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
-<script src="lib/bootstrap/js/bootstrap.js"></script>
-<script type="text/javascript" src="lib/jquery-ui/js/jquery-ui-1.9.2.custom.min.js"></script>
-<link href="lib/jquery-ui/css/ui-lightness/jquery-ui-1.9.2.custom.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://raw.github.com/Matzo/jsoned/master/src/css/jsoned.css">
+<script type="text/javascript" src="https://raw.github.com/Matzo/jsoned/master/src/lib/jquery.min.js"></script>
+<link href="https://raw.github.com/Matzo/jsoned/master/src/lib/bootstrap/css/bootstrap.css" rel="stylesheet">
+<script src="https://raw.github.com/Matzo/jsoned/master/src/lib/bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="https://raw.github.com/Matzo/jsoned/master/src/lib/jquery-ui/js/jquery-ui-1.9.2.custom.min.js"></script>
+<link href="https://raw.github.com/Matzo/jsoned/master/src/lib/jquery-ui/css/ui-lightness/jquery-ui-1.9.2.custom.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://raw.github.com/Matzo/jsoned/master/src/js/editor.js"></script>
+<script type="text/javascript" src="https://raw.github.com/Matzo/jsoned/master/src/js/storage.js"></script>
+<script type="text/javascript" src="https://raw.github.com/Matzo/jsoned/master/src/js/jsoned.js"></script>
+<script type="text/javascript" src="https://raw.github.com/Matzo/jsoned/master/src/js/templates.js"></script>
 
-<script type="text/javascript" src="js/editor.js"></script>
-<script type="text/javascript" src="js/storage.js"></script>
-<script type="text/javascript" src="js/jsoned.js"></script>
 <script>
 $(function() {
     var template = {
@@ -90,7 +91,11 @@ $(function() {
         ],
     };
 
-    new jsoned.Jsoned({template: template, value: value});
+    new jsoned.Jsoned({
+        template: template,
+        templateMaster:jsoned.Templates,
+        value: value
+    });
 });
 </script>
 </head>
@@ -99,7 +104,7 @@ $(function() {
 <h1>JSONED<span class="dark_color">ITOR</span></h1>
 </header>
 
-<h4>Sample Template</h4>
+<h4 id="templateName">Sample Template</h4>
 <section id="inputBox">
 </section>
 
