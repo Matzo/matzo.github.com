@@ -29,6 +29,10 @@
             var template = template || {};
             if (template.type == "string") {
                 result = this.buildStringEditor(template, value);
+            } else if (template.type == "string-multi") {
+                result = this.buildStringMultipleEditor(template, value);
+            } else if (template.type == "number") {
+                result = this.buildNumberEditor(template, value);
             } else if (template.type == "map") {
                 result = this.buildMapEditor(template, value);
             } else if (template.type == "list") {
@@ -44,6 +48,16 @@
         buildStringEditor : function(template, value) {
             var val = value ? value : template.value ? template.value : "";
             var tag = $('<input type="text" name="' + template.name + '" value="' + val + '" class="span6">').addClass("stringEditor");
+            return tag;
+        },
+        buildStringMultipleEditor : function(template, value) {
+            var val = value ? value : template.value ? template.value : "";
+            var tag = $('<textarea name="' + template.name + '" class="span6">' + val + '</textarea>').addClass("stringMultipleEditor");
+            return tag;
+        },
+        buildNumberEditor : function(template, value) {
+            var val = value ? value : template.value ? template.value : 0;
+            var tag = $('<input type="text" name="' + template.name + '" value="' + parseFloat(val, 10) + '" class="span6">').addClass("numberEditor");
             return tag;
         },
         buildListEditor : function(template, value) {
@@ -180,6 +194,10 @@
         buildJSONRecursive : function(editor) {
             if (editor.hasClass("stringEditor")) {
                 return this.buildJSONFromString(editor);
+            } else if (editor.hasClass("stringMultipleEditor")) {
+                return this.buildJSONFromStringMultiple(editor);
+            } else if (editor.hasClass("numberEditor")) {
+                return this.buildJSONFromNumber(editor);
             } else if (editor.hasClass("mapEditor")) {
                 return this.buildJSONFromMap(editor);
             } else if (editor.hasClass("listEditor")) {
@@ -192,6 +210,12 @@
         },
         buildJSONFromString : function(editor) {
             return editor.val();
+        },
+        buildJSONFromStringMultiple : function(editor) {
+            return editor.val();
+        },
+        buildJSONFromNumber : function(editor) {
+            return parseFloat(editor.val(), 10);
         },
         buildJSONFromMap : function(editor) {
             var obj = {};
