@@ -33,6 +33,8 @@
                 result = this.buildStringMultipleEditor(template, value);
             } else if (template.type == "number") {
                 result = this.buildNumberEditor(template, value);
+            } else if (template.type == "boolean") {
+                result = this.buildBooleanEditor(template, value);
             } else if (template.type == "map") {
                 result = this.buildMapEditor(template, value);
             } else if (template.type == "list") {
@@ -48,11 +50,23 @@
         buildStringEditor : function(template, value) {
             var val = value ? value : template.value ? template.value : "";
             var tag = $('<input type="text" name="' + template.name + '" value="' + val + '" class="span6">').addClass("stringEditor");
+            if (template.nullable === true) {
+                tag.addClass("nullable");
+            }
+            if (template.option === true) {
+                tag.addClass("option");
+            }
             return tag;
         },
         buildStringMultipleEditor : function(template, value) {
             var val = value ? value : template.value ? template.value : "";
             var tag = $('<textarea name="' + template.name + '" class="span6">' + val + '</textarea>').addClass("stringMultipleEditor");
+            if (template.nullable === true) {
+                tag.addClass("nullable");
+            }
+            if (template.option === true) {
+                tag.addClass("option");
+            }
             return tag;
         },
         buildNumberEditor : function(template, value) {
@@ -116,22 +130,123 @@
         },
         buildMapEditor : function(template, value) {
             var mapObj = $("<dl></dl>").addClass("dl-horizontal").addClass("mapEditor");
-            var i, propTmpl, propName, propVal;
-            for (i = 0; i < template.value.length; i++) {
-                propTmpl = template.value[i];
-                if (propTmpl && propTmpl.name) {
-                    propName = propTmpl.name;
+            var i, propTmpl, propName, propVal, dt;
+            var key, val;
+            var self = this;
+            var keyEdit = function(_dt) {
+                if (0 < $("input", _dt).length) {
+                    return;
                 }
-                if (value && propName) {
-                    propVal = value[propName];
-                }
+                var _orgName = _dt.html();
+                var _input = $('<input type="text" value="' + _orgName + '" class="span2">');
+                var _newKey;
+                _dt.html("");
+                _dt.append(_input);
+                _input.focus();
+                _input.bind("blur", function() {
+                    _newKey = _input.val();
+                    if (_newKey) {
+                        _dt.html(_newKey);
+                    } else {
+                        _dt.next().remove();
+                        _dt.remove();
+                    }
+                });
+            };
+            var addProperty = function(mapObj, propName, propVal, propTmpl) {
+                var dt,dd;
+                propTmpl = propTmpl || {
+                    type:"string",
+                    name:propName,
+                    option:true,
+                    value:propVal
+                };
                 // dt
-                mapObj.append($("<dt></dt>").html(propName));
+                dt = $("<dt></dt>").html(propName);
+                if (template.expandable) {
+                    dt.addClass("editable");
+
+                    dt.click(function() {
+                        keyEdit($(this));
+                    });
+                }
+                mapObj.append(dt);
                 // dd
-                mapObj.append($("<dd></dd>").append(this.buildEditor(propTmpl, propVal)));
+                dd = $("<dd></dd>").append(self.buildEditor(propTmpl, propVal));
+                mapObj.append(dd);
+                return mapObj;
+            };
+            var moreProperty = function(mapObj) {
+                var more = $('<dt class="moreBtn">+</dt><dd></dd>');
+                more.click(function() {
+                    addProperty(mapObj, "", "");
+                    mapObj.append(more);
+                    var dt = $("dt.editable", mapObj).last();
+                    dt.trigger("click");
+                    dt.hide().slideDown(100);
+                    dt.next().hide().slideDown(100);
+                });
+                mapObj.append(more);
+            }
+            if (template.expandable && value) {
+                for (propName in value) {
+                    if (value.hasOwnProperty(propName)) {
+                        propVal = value[propName];
+                        propTmpl = {
+                            type:"string",
+                            name:propName,
+                            option:true,
+                            value:propVal
+                        };
+
+                        addProperty(mapObj, propName, propVal, propTmpl);
+                    }
+                }
+            } else {
+                for (i = 0; i < template.value.length; i++) {
+                    propTmpl = template.value[i];
+                    if (propTmpl && propTmpl.name) {
+                        propName = propTmpl.name;
+                    }
+                    if (value && propName) {
+                        propVal = value[propName];
+                    }
+
+                    addProperty(mapObj, propName, propVal, propTmpl);
+                }
+            }
+            if (template.expandable) {
+                moreProperty(mapObj);
             }
             return mapObj;
         },
+        buildBooleanEditor : (function() {
+            var radioCount = 0;
+            return function(template, value) {
+                var list = $("<ul></ul>").addClass("inline").addClass("booleanEditor");
+                //var list = $("<ul></ul>");
+
+                var items = ["true", "false"];
+                for (i = 0; i < items.length; i++) {
+                    var li = $("<li></li>");
+                    var name = template.name + '_' + radioCount;
+                    var id = name + '_' + i;
+                    var val = items[i];
+                    var radio = $('<label for="' + id + '"><input type="radio" id="' + id + '" name="' + name + '" value="' + val + '"> ' + val + '</label>');
+                    li.append(radio);
+                    list.append(li);
+                }
+                if (value === false) {
+                    $("input[type=radio]", list).val(["false"]);
+                } else if (template.value === false) {
+                    $("input[type=radio]", list).val(["false"]);
+                } else {
+                    $("input[type=radio]", list).val(["true"]);
+                }
+                radioCount++;
+                return list;
+            }
+        })(),
         buildSelectEditor : (function() {
             var radioCount = 0;
             return function(template, value) {
@@ -198,6 +313,8 @@
                 return this.buildJSONFromStringMultiple(editor);
             } else if (editor.hasClass("numberEditor")) {
                 return this.buildJSONFromNumber(editor);
+            } else if (editor.hasClass("booleanEditor")) {
+                return this.buildJSONFromBoolean(editor);
             } else if (editor.hasClass("mapEditor")) {
                 return this.buildJSONFromMap(editor);
             } else if (editor.hasClass("listEditor")) {
@@ -209,13 +326,33 @@
             }
         },
         buildJSONFromString : function(editor) {
-            return editor.val();
+            var result = editor.val();
+            if (editor.hasClass("option") && !result) {
+                result = undefined;
+            } else if (editor.hasClass("nullable") && !result) {
+                result = null;
+            }
+            return result;
         },
         buildJSONFromStringMultiple : function(editor) {
-            return editor.val();
+            var result = editor.val();
+            if (editor.hasClass("option") && !result) {
+                result = undefined;
+            } else if (editor.hasClass("nullable") && !result) {
+                result = null;
+            }
+            return result;
         },
         buildJSONFromNumber : function(editor) {
             return parseFloat(editor.val(), 10);
+        },
+        buildJSONFromBoolean : function(editor) {
+            var result = $("input[type=radio]:checked", editor).val();
+            if (result == "true") {
+                return true;
+            } else {
+                return false;
+            }
         },
         buildJSONFromMap : function(editor) {
             var obj = {};

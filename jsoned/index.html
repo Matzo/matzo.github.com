@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>JSONEditor</title>
+<title>JPON</title>
 <link rel="stylesheet" href="css/jsoned.css">
 <script type="text/javascript" src="lib/jquery.min.js"></script>
 <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -31,8 +31,11 @@ $(function() {
                         { name:"date",        type:"string" },
                         { name:"title",       type:"string" },
                         { name:"description", type:"string-multi" },
+                        { name:"option",      type:"string", option:true },
+                        { name:"nullable",    type:"string", nullable:true },
                         { name:"score",       type:"number" },
                         { name:"type", type:"select", value:["select1", "select2", "select3"] },
+                        { name:"boolean", type:"boolean", value:true },
                         { name:"attributes", type:"select-multi", value:["attr1", "attr2", "attr3", "attr4"] }
                     ]
                 }
@@ -49,12 +52,24 @@ $(function() {
                         { name:"date",   type:"string" },
                         { name:"title",  type:"string" },
                         { name:"description", type:"string-multi" },
+                        { name:"option",      type:"string-multi", option:true },
+                        { name:"nullable",    type:"string-multi", nullable:true },
                         { name:"score",       type:"number" },
                         { name:"type", type:"select", value:["select1", "select2", "select3"] },
+                        { name:"boolean", type:"boolean", value:false },
                         { name:"attributes", type:"select-multi", value:["attr1", "attr2", "attr3", "attr4"] }
                     ]
                 }
             },
+            {
+                name:"custom",
+                type:"map",
+                expandable:true,
+                value:[
+                    { name:"key1", type:"string" },
+                    { name:"key2", type:"string" }
+                ]
+            }
         ]
     }
 
@@ -70,7 +85,7 @@ $(function() {
 </head>
 <body class="container-fluid">
 <header class="page-header">
-<h1>JSONED<span class="dark_color">ITOR</span></h1>
+<h1>J<span class="accent_color">P</span>ON</h1>
 </header>
 
 <h4 id="templateName">Sample Template</h4>
