@@ -7,6 +7,13 @@
 h1:after {
     clear: both;
 }
+#templateBox {
+    margin-bottom:20px;
+}
+#selectedTemplateName {
+    font-weight: bold;
+}
+
 #editor {
 }
 
@@ -15,13 +22,46 @@ h1:after {
 
 #editor dl {
     margin:0px;
+
+    border-left: 8px solid lightgrey;
+    border-top-left-radius:10px;
+    border-bottom-left-radius:10px;
+}
+#editor ul.ui-sortable dl {
+    border-left: 8px double lightgrey;
+    border-top-left-radius:0px;
+    border-bottom-left-radius:0px;
+}
+#editor dl dl {
     padding:10px 0px;
+
+    border-top:1px solid #eee;
+    border-bottom:1px solid #eee;
+    border-right:1px solid #eee;
+}
+#editor dl > dd > dl {
+    margin:5px 0px;
+}
+#editor dl.mapEditor > dt {
+    margin-bottom:-25px;
+    line-height:25px;
+}
+#editor dl.mapEditor > dt.editable > input {
+    height:20px;
+    line-height:15px;
+}
+#editor dl.mapEditor > dd {
+    margin-bottom:0px;
+}
+#editor ol,
+#editor ul {
+    margin:0px;
 }
 #editor ol.listEditor > li,
 #editor ul.listEditor > li {
-    border: 1px solid #f5f5f5;
-    border-left: 8px double lightgrey;
-    background-color:#fff;
+    border-left: 0px solid lightgrey;
+    border-top-left-radius:10px;
+    border-bottom-left-radius:10px;
     margin-bottom:10px;
 }
 #editor ul.listEditor > li {
@@ -34,6 +74,7 @@ h1:after {
 #editor ol.listEditor > li:hover,
 #editor ul.listEditor > li:hover {
     background-color:#fbfbfb;
+    cursor: all-scroll;
 }
 
 #editor ol.listEditor > li.moreBtn,
@@ -109,6 +150,7 @@ h1:after {
 footer {
     border-top: 1px solid #eee;
     padding:10px;
+    margin-top:20px;
     margin-bottom:40px;
     text-align: center
 }

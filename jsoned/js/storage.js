@@ -1,21 +1,21 @@
 (function($) {
     if (!$) return;
-    if (!this.jsoned) this.jsoned = {};
-    if (jsoned.Storage) return;
+    if (!this.jpon) this.jpon = {};
+    if (jpon.Storage) return;
 
-    jsoned.Storage = function(options) {
+    jpon.Storage = function(options) {
         this.options = $.extend({
             inputBoxId : "inputBox",
             outputBoxId : "outputBox"
         }, options);
     }
 
-    jsoned.Storage.prototype = {
+    jpon.Storage.prototype = {
         initStorage : function() {
             var self = this;
 
             var inputBox = $("#" + this.options.inputBoxId);
-            inputBox.append('<div id="dragAndDropBox"><input type="file" id="inputFile" class="basket"></input><div>^ Drag & Drop Here!</div></div>');
+            inputBox.append('<div id="dragAndDropBox"><form id="inputForm"><input type="file" id="inputFile" class="basket"></input></form><div>^ Drag & Drop Here!</div></div>');
             //inputBox.append('<div id="manualInputBox"><textarea id="manualInput"></textarea>');
             //inputBox.append('<div id="selectFileBox"><input type="file" id="selectFile"></input></div>');
 
@@ -78,6 +78,7 @@
             var loading = true;
             if (/\.js$|\.json$/.test(file.name)) {
                 reader.onload = function (evt) {
+                    $("#inputForm").get(0).reset();
                     if (self.options.loadSuccess) {
                         self.options.loadSuccess(reader.result, file.name);
                     } else {

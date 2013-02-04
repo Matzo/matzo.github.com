@@ -1,9 +1,9 @@
 (function($) {
     if (!$) return;
-    if (!this.jsoned) this.jsoned = {};
-    if (jsoned.Templates) return;
+    if (!this.jpon) this.jpon = {};
+    if (jpon.Templates) return;
 
-    jsoned.Templates = [
+    jpon.Templates = [
         // sample1.json
         {
             filename : "sample1.json",
@@ -22,9 +22,13 @@
                             value:[
                                 { name:"date",   type:"string" },
                                 { name:"title",  type:"string" },
-                                { name:"url",    type:"string" },
-                                { name:"type", type:"select", value:["select1", "select2", "select3"] },
-                                { name:"attributes", type:"select-multi", value:["attr1", "attr2", "attr3", "attr4"] }
+                                { name:"description", type:"string-multi" },
+                                { name:"option",      type:"string", option:true },
+                                { name:"nullable",    type:"string", nullable:true },
+                                { name:"score",       type:"number" },
+                                { name:"type",   type:"select", value:["select1", "select2", "select3"] },
+                                { name:"attributes", type:"select-multi", value:["attr1", "attr2", "attr3", "attr4"] },
+                                { name:"foo",    type:"boolean", value:true }
                             ]
                         }
                     },
@@ -36,15 +40,29 @@
                         max:10,
                         value:{
                             type:"map",
+                            expandable:true,
                             value:[
                                 { name:"date",   type:"string" },
                                 { name:"title",  type:"string" },
-                                { name:"url",    type:"string" },
+                                { name:"description", type:"string-multi" },
+                                { name:"option",      type:"string-multi", option:true },
+                                { name:"nullable",    type:"string-multi", nullable:true },
+                                { name:"score",       type:"number" },
                                 { name:"type", type:"select", value:["select1", "select2", "select3"] },
-                                { name:"attributes", type:"select-multi", value:["attr1", "attr2", "attr3", "attr4"] }
+                                { name:"attributes", type:"select-multi", value:["attr1", "attr2", "attr3", "attr4"] },
+                                { name:"foo",    type:"boolean", value:false }
                             ]
                         }
                     },
+                    {
+                        name:"custom",
+                        type:"map",
+                        expandable:true,
+                        value:[
+                            { name:"key1", type:"string" },
+                            { name:"key2", type:"string" }
+                        ]
+                    }
                 ]
             }
         },

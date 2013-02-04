@@ -1,18 +1,18 @@
 (function($) {
     if (!$) return;
-    if (!this.jsoned) this.jsoned = {};
-    if (jsoned.Editor) return;
+    if (!this.jpon) this.jpon = {};
+    if (jpon.Editor) return;
 
     // for IE
     var _DEFAULT = "default";
 
-    jsoned.Editor = function(options) {
+    jpon.Editor = function(options) {
         this.options = $.extend({
             editorAreaId : "editor"
         }, options);
     }
 
-    jsoned.Editor.prototype = {
+    jpon.Editor.prototype = {
         initEditor : function(template, value) {
             var editorObj = this.buildEditor(template, value);
             var self = this;
@@ -143,7 +143,7 @@
                 _dt.html("");
                 _dt.append(_input);
                 _input.focus();
-                _input.bind("blur", function() {
+                var _blur = function() {
                     _newKey = _input.val();
                     if (_newKey) {
                         _dt.html(_newKey);
@@ -151,16 +151,27 @@
                         _dt.next().remove();
                         _dt.remove();
                     }
+                };
+                _input.bind("keyup", function(e) {
+                    switch (e.keyCode) {
+                    case 13: // Enter
+                        _blur();
+                    }
+                });
+                _input.bind("blur", function() {
+                    _blur();
                 });
             };
             var addProperty = function(mapObj, propName, propVal, propTmpl) {
                 var dt,dd;
-                propTmpl = propTmpl || {
-                    type:"string",
-                    name:propName,
-                    option:true,
-                    value:propVal
-                };
+                propTmpl = propTmpl || template.value[0];
+                propTmpl.name = propName;
+                //propTmpl = propTmpl || {
+                //    type:"string",
+                //    name:propName,
+                //    option:true,
+                //    value:propVal
+                //};
                 // dt
                 dt = $("<dt></dt>").html(propName);
                 if (template.expandable) {
@@ -177,7 +188,7 @@
                 return mapObj;
             };
             var moreProperty = function(mapObj) {
-                var more = $('<dt class="moreBtn span2">+</dt><dd></dd>');
+                var more = $('<dt class="moreBtn span2">+</dt><dd>&nbsp;</dd>');
                 more.click(function() {
                     addProperty(mapObj, "", "");
                     mapObj.append(more);
@@ -378,6 +389,9 @@
         },
         buildJSONFromSelect : function(editor) {
             var result = $("input[type=radio]:checked", editor).val();
+            if (result === undefined) {
+                result = null;
+            }
             return result;
         },
         buildJSONFromSelectMultiple : function(editor) {
