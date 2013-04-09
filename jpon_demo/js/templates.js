@@ -1,5 +1,4 @@
-(function($) {
-    if (!$) return;
+(function($) { if (!$) return;
     if (!this.jpon) this.jpon = {};
     if (jpon.Templates) return;
 
@@ -139,13 +138,47 @@
         // sample5
         {
             filename : "prefix_suffix.json",
-            prefix : "var data = {\"test\":$(\"#id\").val()+\"1234567890!@#$%^&*()~-_=+[{]}\\|;:'\",<.>/?\"};\nvar json = ",
+            prefix : "var data = {\"test\":$(\"#id\").val()+\"1234567890!@#$%^&*()~-_=+[{]}\\|;:'\\\",<.>/?\"};\nvar json = ",
             suffix : ";\nvar data2 = {\"aaa\":[1,2,3]};",
             template : {
                 type:"map",
                 value:[
                     { name:"foo", type:"string" },
                     { name:"bar", type:"string" }
+                ]
+            }
+        },
+        // sample6
+        {
+            filename : "validate.json",
+            charset : "UTF-8",
+            template : {
+                type:"map",
+                value:[
+                    {
+                        name:"Name",
+                        validate:"^[a-zA-Z0-9 ]+$",
+                        placeholder:"input your name",
+                        type:"string"
+                    },
+                    {
+                        name:"Address",
+                        validate:"^[a-zA-Z0-9 \n]+$",
+                        placeholder:"Country City",
+                        type:"string-multi"
+                    },
+                    {
+                        name:"ZipCode",
+                        validate:"^[0-9]+$",
+                        placeholder:"1234",
+                        type:"number"
+                    },
+                    {
+                        name:"YYYY-MM-DD",
+                        validate:"^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+                        placeholder:"1980-04-13",
+                        type:"string"
+                    }
                 ]
             }
         }
