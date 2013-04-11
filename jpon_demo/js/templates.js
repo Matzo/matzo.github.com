@@ -1,4 +1,5 @@
-(function($) { if (!$) return;
+(function($) {
+    if (!$) return;
     if (!this.jpon) this.jpon = {};
     if (jpon.Templates) return;
 
