@@ -128,9 +128,12 @@
             return input;
         },
         buildNumberEditor : function(template, value) {
-            var val = value ? value : template.value ? template.value : 0;
+            var val = value !== undefined ? parseFloat(value, 10) : template.value ? template.value : "";
             var placeholder = template.placeholder ? ' placeholder="' + template.placeholder + '"' : "";
-            var input = $('<input type="text" name="' + template.name + '" value="' + parseFloat(val, 10) + '" class="span6"' + placeholder + '>').addClass("numberEditor");
+            var input = $('<input type="text" name="' + template.name + '" value="' + val + '" class="span6"' + placeholder + '>').addClass("numberEditor");
+            if (template.option) {
+                input.addClass("option");
+            }
 
             this.addValidate(template, input);
             this.addEnterControl(input);
@@ -143,6 +146,9 @@
             var self = this;
             var i;
             var list = $("<ul></ul>").addClass("listEditor");
+            if (template.option) {
+                list.addClass("option");
+            }
             list.data("template", template);
             value = value || [];
 
@@ -161,9 +167,14 @@
 
             var buildListItem = function(liTemplate, value) {
                 var li = $("<li class='values'></li>");
+                if (liTemplate.width == "short") {
+                    li.addClass("short");
+                }
                 var item = self.buildEditor(liTemplate, value);
                 li.append(item);
-                li.prepend("<div class='listNumber'></div>");
+                if (liTemplate.listNumber) {
+                    li.prepend("<div class='listNumber'></div>");
+                }
 
                 if (template.expandable) {
                     var del = $("<div class='delBtn'>x</div>");
@@ -203,7 +214,7 @@
             var list = ul.children();
             for (var i = 0; i < list.length; i++) {
                 var item = list.get(i);
-                $("div.listNumber", item).html(i + 1);
+                $(">div.listNumber", item).html(i + 1);
             }
         },
         buildMapEditor : function(template, value) {
@@ -211,6 +222,9 @@
             var i, propTmpl, propName, propVal, dt;
             var key, val;
             var self = this;
+            if (template.option) {
+                mapObj.addClass("option");
+            }
             var keyEdit = function(_dt) {
                 if (0 < $("input", _dt).length) {
                     return;
@@ -453,7 +467,11 @@
             return result;
         },
         buildJSONFromNumber : function(editor) {
-            return parseFloat(editor.val(), 10);
+            if (editor.hasClass("option") && !editor.val()) {
+                return undefined;
+            } else {
+                return !editor.val() ? 0 : parseFloat(editor.val(), 10);
+            }
         },
         buildJSONFromBoolean : function(editor) {
             var result = $("input[type=radio]:checked", editor).val();
@@ -471,19 +489,33 @@
                 var key = $(children.get(i)).text();
                 var child = $(children.get(i+1)).children();
                 var value = this.buildJSONRecursive(child);
-                obj[key] = value;
+                if (!child.hasClass("option") || value !== undefined) {
+                    obj[key] = value;
+                }
             }
 
-            return obj;
+            if (editor.hasClass("option") && JSON.stringify(obj) == "{}") {
+                return undefined;
+            } else {
+                return obj;
+            }
         },
         buildJSONFromList : function(editor) {
             var list = [];
             var children = editor.children().filter(".values");
+            var editorClasses = ".mapEditor,.listEditor,.numberEditor,.stringEditor,.stringMultipleEditor";
             for (var i = 0; i < children.size(); i++) {
-                var child = $(children.get(i)).children();
-                list.push(this.buildJSONRecursive(child));
+                var child = $(children.get(i)).children().filter(editorClasses);
+                var result = this.buildJSONRecursive(child);
+                if (!child.hasClass("option") || result !== undefined) {
+                    list.push(this.buildJSONRecursive(child));
+                }
             }
-            return list;
+            if (editor.hasClass("option") && list.length == 0) {
+                return undefined;
+            } else {
+                return list;
+            }
         },
         buildJSONFromSelect : function(editor) {
             var result = $("input[type=radio]:checked", editor).val();
